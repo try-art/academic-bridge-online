@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import CoursesList from "./pages/CoursesList";
 import TasksList from "./pages/TasksList";
 import UserProfile from "./pages/UserProfile";
+import UserManagement from "./pages/UserManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -88,6 +89,15 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <UserProfile />
+          </ProtectedRoute>
+        } 
+      />
+      
+      <Route 
+        path="/usuarios" 
+        element={
+          <ProtectedRoute>
+            <UserManagement />
           </ProtectedRoute>
         } 
       />

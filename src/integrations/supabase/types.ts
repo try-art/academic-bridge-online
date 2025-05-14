@@ -53,7 +53,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_user_with_role: {
+        Args: { email: string; password: string; name: string; role: string }
+        Returns: string
+      }
     }
     Enums: {
       user_role: "admin" | "instructor" | "user"

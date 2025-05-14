@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,7 +11,8 @@ import {
   CheckSquare,
   LogOut,
   Menu,
-  X
+  X,
+  UserPlus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -33,7 +33,7 @@ export const Navigation = () => {
 
   const adminLinks = [
     { to: '/dashboard', icon: <FileText size={20} />, text: 'Dashboard' },
-    { to: '/usuarios', icon: <Users size={20} />, text: 'Usuarios' },
+    { to: '/usuarios', icon: <UserPlus size={20} />, text: 'Usuarios' },
     { to: '/cursos', icon: <Book size={20} />, text: 'Cursos' },
     { to: '/reportes', icon: <CheckSquare size={20} />, text: 'Reportes' },
   ];
