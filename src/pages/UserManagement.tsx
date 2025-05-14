@@ -44,7 +44,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Loader2, UserPlus } from 'lucide-react';
 
-// Define el tipo para los usuarios
+// Interfaz para los perfiles de usuario
 interface Profile {
   id: string;
   name: string | null;
@@ -53,7 +53,7 @@ interface Profile {
   avatar: string | null;
 }
 
-// Esquema de validación para el formulario de crear usuario
+// Esquema para validar el formulario de creación de usuario
 const createUserSchema = z.object({
   name: z.string().min(2, { message: 'El nombre debe tener al menos 2 caracteres' }),
   email: z.string().email({ message: 'Correo electrónico inválido' }),
@@ -119,8 +119,8 @@ const UserManagement = () => {
     try {
       setIsCreating(true);
       
-      // Usar directamente la API de Supabase Auth para el registro
-      const { data: userData, error: signUpError } = await supabase.auth.signUp({
+      // Creamos primero el usuario en Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
@@ -131,30 +131,34 @@ const UserManagement = () => {
         }
       });
 
-      if (signUpError) throw signUpError;
+      if (authError) {
+        throw authError;
+      }
       
-      if (!userData.user) {
+      if (!authData.user) {
         throw new Error("No se pudo crear el usuario");
       }
       
-      // Mostrar mensaje de éxito
+      // Mostramos mensaje de éxito
       toast({
         title: "Usuario creado",
         description: "El usuario se ha creado exitosamente"
       });
       
+      // Reseteamos el formulario y cerramos el diálogo
       form.reset();
       setDialogOpen(false);
       
-      // Esperar un poco para que el trigger tenga tiempo de ejecutarse
+      // Esperamos un poco para que el trigger tenga tiempo de ejecutarse
+      // y luego recargamos los perfiles
       setTimeout(() => {
         fetchProfiles();
-      }, 1000);
+      }, 1500);
     } catch (error: any) {
       console.error('Error creating user:', error);
       toast({
         variant: "destructive",
-        title: "Error",
+        title: "Error al crear usuario",
         description: error.message || 'Error al crear el usuario'
       });
     } finally {
