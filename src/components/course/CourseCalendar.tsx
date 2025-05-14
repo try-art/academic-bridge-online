@@ -205,21 +205,11 @@ const CourseCalendar: React.FC<CourseCalendarProps> = ({ courseId, canEdit }) =>
               modifiersStyles={{
                 selected: { backgroundColor: '#3b82f6', color: 'white' },
                 outside: { opacity: 0.5 },
-                today: { color: '#3b82f6', fontWeight: 'bold' }
+                today: { color: '#3b82f6', fontWeight: 'bold' },
+                hasEvent: { backgroundColor: '#e0f2fe', borderRadius: '50%' }
               }}
               modifiers={{
                 hasEvent: (date) => isDayWithEvents(date)
-              }}
-              styles={{
-                day: (date) => {
-                  if (isDayWithEvents(date)) {
-                    return {
-                      backgroundColor: '#e0f2fe',
-                      borderRadius: '50%'
-                    };
-                  }
-                  return {};
-                }
               }}
             />
           </div>
