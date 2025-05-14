@@ -42,7 +42,7 @@ import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Loader2, PlusCircle, UserPlus } from 'lucide-react';
+import { Loader2, UserPlus } from 'lucide-react';
 
 // Define el tipo para los usuarios
 interface Profile {
@@ -114,22 +114,28 @@ const UserManagement = () => {
     try {
       setIsCreating(true);
       
-      // Llamada a la función RPC create_user_with_role que creamos en la base de datos
-      const { data: newUserId, error } = await supabase
-        .rpc('create_user_with_role', {
-          email: data.email,
-          password: data.password,
-          name: data.name,
-          role: data.role
-        });
+      // Crear directamente en la API de Supabase Auth
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            name: data.name,
+            role: data.role
+          }
+        }
+      });
 
-      if (error) throw error;
+      if (signUpError) throw signUpError;
       
       // Actualizar la lista de usuarios
       toast.success('Usuario creado exitosamente');
       form.reset();
       setDialogOpen(false);
-      fetchProfiles();
+      // Esperar un poco antes de recargar para asegurar que el trigger ha creado el perfil
+      setTimeout(() => {
+        fetchProfiles();
+      }, 1000);
     } catch (error: any) {
       console.error('Error creating user:', error);
       toast.error(error.message || 'Error al crear el usuario');
