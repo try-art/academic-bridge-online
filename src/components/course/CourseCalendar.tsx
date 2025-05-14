@@ -15,6 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format, parseISO, isWithinInterval, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 interface CourseCalendarProps {
   courseId: string;
@@ -210,8 +211,8 @@ const CourseCalendar: React.FC<CourseCalendarProps> = ({ courseId, canEdit }) =>
                 hasEvent: (date) => isDayWithEvents(date)
               }}
               styles={{
-                day: (day) => {
-                  if (isDayWithEvents(day)) {
+                day: (date) => {
+                  if (isDayWithEvents(date)) {
                     return {
                       backgroundColor: '#e0f2fe',
                       borderRadius: '50%'
