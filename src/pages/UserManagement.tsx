@@ -38,7 +38,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -67,6 +67,7 @@ type CreateUserFormValues = z.infer<typeof createUserSchema>;
 
 const UserManagement = () => {
   const { currentUser } = useAuth();
+  const { toast } = useToast();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
@@ -99,7 +100,11 @@ const UserManagement = () => {
       setProfiles(data as Profile[]);
     } catch (error) {
       console.error('Error fetching profiles:', error);
-      toast.error('No se pudieron cargar los usuarios');
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No se pudieron cargar los usuarios"
+      });
     } finally {
       setLoading(false);
     }
@@ -114,8 +119,8 @@ const UserManagement = () => {
     try {
       setIsCreating(true);
       
-      // Crear directamente en la API de Supabase Auth
-      const { error: signUpError } = await supabase.auth.signUp({
+      // Usar directamente la API de Supabase Auth para el registro
+      const { data: userData, error: signUpError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
@@ -128,17 +133,30 @@ const UserManagement = () => {
 
       if (signUpError) throw signUpError;
       
-      // Actualizar la lista de usuarios
-      toast.success('Usuario creado exitosamente');
+      if (!userData.user) {
+        throw new Error("No se pudo crear el usuario");
+      }
+      
+      // Mostrar mensaje de éxito
+      toast({
+        title: "Usuario creado",
+        description: "El usuario se ha creado exitosamente"
+      });
+      
       form.reset();
       setDialogOpen(false);
-      // Esperar un poco antes de recargar para asegurar que el trigger ha creado el perfil
+      
+      // Esperar un poco para que el trigger tenga tiempo de ejecutarse
       setTimeout(() => {
         fetchProfiles();
       }, 1000);
     } catch (error: any) {
       console.error('Error creating user:', error);
-      toast.error(error.message || 'Error al crear el usuario');
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message || 'Error al crear el usuario'
+      });
     } finally {
       setIsCreating(false);
     }
