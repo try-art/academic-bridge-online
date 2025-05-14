@@ -116,6 +116,8 @@ const CourseCard = ({
   isAdmin?: boolean,
   isTeacher?: boolean
 }) => {
+  const navigate = useNavigate();
+  
   return (
     <Card className="overflow-hidden hover:shadow-md transition-shadow">
       <div className="h-40 overflow-hidden">
@@ -134,6 +136,9 @@ const CourseCard = ({
             {course.students.length} estudiantes
           </div>
           <div className="flex space-x-2">
+            <Button variant="outline" size="sm" onClick={() => navigate(`/curso/${course.id}`)}>
+              Ver curso
+            </Button>
             {(isAdmin || isTeacher) && (
               <>
                 <Button variant="outline" size="sm" onClick={() => onEdit(course)}>

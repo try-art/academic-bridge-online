@@ -9,6 +9,7 @@ import { CoursesProvider } from "@/contexts/CoursesContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import CoursesList from "./pages/CoursesList";
+import CourseDetail from "./pages/CourseDetail";
 import TasksList from "./pages/TasksList";
 import UserProfile from "./pages/UserProfile";
 import UserManagement from "./pages/UserManagement";
@@ -62,6 +63,15 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <CoursesList />
+          </ProtectedRoute>
+        } 
+      />
+      
+      <Route 
+        path="/curso/:id" 
+        element={
+          <ProtectedRoute>
+            <CourseDetail />
           </ProtectedRoute>
         } 
       />
